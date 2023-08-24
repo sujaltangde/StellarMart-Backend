@@ -72,6 +72,30 @@ exports.getAllProducts = async (req, res) => {
     }
 }
 
+// Get Products by Category
+exports.getCategoryProducts = async (req, res) => {
+    try {
+
+        const products = await Product.find({category:req.query.category}) 
+        console.log(req.query.category)
+
+        res.status(200).json({
+            success: true,
+            products
+        })
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+}
+
+
+
+
+
+
 
 // Get Admin Products
 exports.getAdminProducts = async (req, res) => {
