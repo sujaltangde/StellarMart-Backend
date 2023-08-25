@@ -49,21 +49,25 @@ exports.createProduct = async (req, res, next) => {
 exports.getAllProducts = async (req, res) => {
     try {
         const resultPerPage = 8;
-        const productCount = await Product.countDocuments();
+        const productsCount = await Product.countDocuments();
 
         const apiFeature = new ApiFeatures(Product.find(), req.query)
             .search()
             .filter()
-            .pagination(resultPerPage)
+            .pagination(resultPerPage); 
 
         const products = await apiFeature.query;
+
+        const filteredProductsCount = products.length;
 
         res.status(200).json({
             success: true,
             products,
-            productCount,
-            resultPerPage
-        })
+            productsCount,
+            resultPerPage,
+            filteredProductsCount,
+        });
+
     } catch (err) {
         res.status(500).json({
             success: false,
@@ -76,7 +80,7 @@ exports.getAllProducts = async (req, res) => {
 exports.getCategoryProducts = async (req, res) => {
     try {
 
-        const products = await Product.find({category:req.query.category}) 
+        const products = await Product.find({ category: req.query.category })
         console.log(req.query.category)
 
         res.status(200).json({
@@ -127,7 +131,7 @@ exports.updateProduct = async (req, res) => {
                 message: "Product not found"
             })
         }
-        
+
         // Images Start Here
         let images = [];
         if (typeof req.body.images === "string") {
